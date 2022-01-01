@@ -1,6 +1,6 @@
 #python
 from typing import Optional
-from fastapi.param_functions import Query
+from fastapi.param_functions import Path, Query,Path
 #pydantic
 from pydantic import BaseModel
 #FastAPI
@@ -32,7 +32,30 @@ def create_person(person: Person = Body(...)):
 #validaciones query parameters
 @app.get("/person/detail")
 def show_person(
-    name: Optional[str] = Query(None,min_length=1,max_length=50),
-    age: int = Query(...)
+    name: Optional[str] = Query(
+        None,
+        min_length=1,
+        max_length=50,
+        title = "Perosn Name",
+        description= "this is the person name"
+        ),
+    age: int = Query(
+        ...,
+        title = "Persos age",
+        description= "This is the person age, It´s required"
+        )
 ):
     return {name: age}
+
+#validaciones: path parameters
+
+@app.get("/person/detail/{person_id}")
+def show_person(
+    person_id: int = Path(
+        ...,
+        gt=0,
+        title= "person´s Id",
+        description = "This is the ID person, It´s required"
+        )
+):
+    return {person_id: "It_exist!!"}
