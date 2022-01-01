@@ -1,10 +1,12 @@
 #python
 from typing import Optional
+from fastapi.param_functions import Query
 #pydantic
 from pydantic import BaseModel
 #FastAPI
 from fastapi import FastAPI
 from fastapi import Body
+from fastapi import Query
 
 app = FastAPI()
 
@@ -23,6 +25,14 @@ def home():
     return {"hello": "word"}
 
 #reques an response body
-@app.post("/person/new")
+@app.post("/api/person/new")
 def create_person(person: Person = Body(...)):
     return person
+
+#validaciones query parameters
+@app.get("/person/detail")
+def show_person(
+    name: Optional[str] = Query(None,min_length=1,max_length=50),
+    age: int = Query(...)
+):
+    return {name: age}
